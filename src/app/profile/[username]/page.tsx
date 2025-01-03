@@ -3,8 +3,9 @@ import { notFound } from 'next/navigation';
 import React from 'react'
 import ProfilePageClient from './ProfilePageClient';
 
-export async function generateMetadata({ params }: { params: { username: string }}) {
-    const user = await getProfileByUsername(params.username);
+export async function generateMetadata({ params }: { params: tParams }) {
+    const { username } = await params;
+    const user = await getProfileByUsername(username);
     if (!user) return;
 
     return {
@@ -13,8 +14,11 @@ export async function generateMetadata({ params }: { params: { username: string 
     }
 }
 
-const ProfileServer = async ({ params }: { params: { username: string }}) => {
-    const user = await getProfileByUsername(params.username);
+type tParams = Promise<{ username: string }>;
+
+const ProfileServer = async ({ params }: { params: tParams}) => {
+    const { username } = await params;
+    const user = await getProfileByUsername(username);
     if (!user) return notFound();
 
     const [ posts, likedPosts, isCurrentUserFollowing ] = await Promise.all([
