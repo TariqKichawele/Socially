@@ -1,3 +1,5 @@
+'use client'
+
 import { getPosts } from '@/actions/postActions';
 import { SignInButton, useUser } from '@clerk/nextjs';
 import React, { useState } from 'react'
@@ -10,6 +12,7 @@ import { Textarea } from './ui/textarea';
 import Link from 'next/link';
 import DeleteAlertDialog from './DeleteAlertDialog';
 import { formatDistanceToNow } from 'date-fns';
+import { toggleLike, createComement, deletePost } from '@/actions/postActions';
 
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
@@ -100,7 +103,7 @@ const PostCard = ({ post, dbUserId }: { post: Post, dbUserId: string | null }) =
                             </div>
                             {/* Check if current user is the post author */}
                             {dbUserId === post.author.id && (
-                                <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
+                                <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDelete} />
                             )}
                         </div>
                         <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>

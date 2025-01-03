@@ -9,7 +9,10 @@ export async function syncUser() {
         const { userId } = await auth();
         const user = await currentUser();
 
-        if (!userId || !user) return;
+        if (!userId || !user) {
+            console.log("User ID or user data is missing");
+            return;
+        }
 
         const existingUser = await prisma.user.findUnique({
             where: {
@@ -38,7 +41,7 @@ export async function syncUser() {
 export async function getUserByClerkId(clerkId: string) {
     return prisma.user.findUnique({
         where: {
-            clerkId
+            clerkId: clerkId
         },
         include: {
             _count: {
